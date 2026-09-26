@@ -3,7 +3,8 @@
 This is the beginning of a brand new app for petrol stations searching and their comparison
 in order to find the cheapest fuel for you. I decided to name this app "Litrivo" as per domain
 and trademark research I conducted with ChatGPT and Claude Code, where the name comes out as
-a compound of the word for litre, and the -ivo suffix.
+a compound of the word for litre, and the -ivo suffix, which is a Czech wordplay evoking "fuel"
+("_palivo_" in Czech).
 
 This project is being developed as part of my diploma thesis, which continues off my bachelor
 thesis actually. While my bachelor thesis focused on proof of concept web app, this project
