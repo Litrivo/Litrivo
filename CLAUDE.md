@@ -12,6 +12,10 @@ Every subdirectory has its own `CLAUDE.md` describing its component. **The "Thes
 
 `README.md` in the root is the public project description written by the author: the project idea, an overview of the parts, the license and an AI assistance transparency statement. It is the author's own text; edit it only on the author's request, and keep the component descriptions in the `CLAUDE.md` files consistent with it.
 
+Planning documents live in `docs/`:
+
+- [`docs/infra-email.md`](docs/infra-email.md) — infrastructure plan (status: planning, nothing deployed): hostnames and Cloudflare proxy settings, the self-hosted mail server (docker-mailserver with Rspamd and a local Ollama), mail DNS (SPF, DKIM, DMARC, PTR), client autoconfiguration, Kubernetes high availability for mail, and hosting candidates. Items are tagged **[decided]** (decided by the author), **[recommended]** (awaiting confirmation) and **[open]** (unresolved). Treat only [decided] items as settled.
+
 ## Thesis context
 
 Litrivo is the practical part of the author's master's thesis (Ing. degree, part-time study, Faculty of Electrical Engineering and Computer Science, VSB – Technical University of Ostrava, FEI VŠB-TUO). Supervisor: prof. Miroslav Vozňák.
@@ -58,19 +62,24 @@ Conversations with AI (ChatGPT, Claude) are **not cited as a source of facts** i
 |---|---|
 | `api` | backend: REST API service over the database, plus its OpenAPI specification — the single source of truth for the REST contract; clients are generated from it |
 | `server` | public-facing reverse proxy (HTTP/HTTPS, ports 80 and 443) in front of `api` and `web-app` |
-| `web-app` | web frontend (PWA) |
-| `android-app` | Android mobile app |
+| `web-app` | web frontend (PWA) in React / Next.js, served on `app.litrivo.com` |
+| `website` | presentation website on the apex `litrivo.com`: project website for the store listings, download links and QR codes |
+| `mobile-app` | mobile app in React Native — Android first, iOS later from the same codebase |
 | `crawler` | indexes petrol station brands, stations and their locations; does not collect prices |
 | `db` | database: schema, migrations and seed data (users, brands, stations, crowdsourced prices) |
 | `kubernetes` | deployment (Kubernetes manifests) |
 
 All subdirectories are empty so far. Build, lint and test commands and an architecture description will be added once there is code. The project is licensed under MIT (`LICENSE` in the repository root).
 
+The chosen stack (React / Next.js for `web-app`, React Native for `mobile-app`) is meant to be sufficient for the thesis. A future rewrite in Rust for performance is a possibility, but it is outside the scope of the thesis.
+
+The apex `litrivo.com` hosts a separate **presentation website**. It is the project website for the store listings (Google Play now, the Apple App Store later) and links to the app: download links and QR codes for Google Play and the App Store, and a link that opens the web app on `app.litrivo.com`. It lives in `website`.
+
 ### Why a monorepo (decided 2026-09-26)
 
 Originally the root folder held seven separate repositories with zero commits; they were merged into one.
 
-- **The API contract is the backbone of the project.** An endpoint change touches `api`, `web-app` and `android-app` at once — in a monorepo that is one commit, and `main` can never be in a half-migrated state where the server speaks the new version and Android still the old one.
+- **The API contract is the backbone of the project.** An endpoint change touches `api`, `web-app` and `mobile-app` at once — in a monorepo that is one commit, and `main` can never be in a half-migrated state where the server speaks the new version and Android still the old one.
 - **Shared artefacts** (OpenAPI spec, DTOs, types generated from the schema) live in the repository once, without publishing packages to npm and Maven or dealing with submodules.
 - **Overhead is not multiplied** sevenfold for CI, dependabot, branch protection, secrets, LICENSE and README. For a single developer with a deadline, that matters.
 - **Splitting is easy, merging is not.** `git subtree split` or `filter-repo` can extract a subdirectory with its history into its own repository at any time; merging seven histories after the fact would mean rewriting everything.

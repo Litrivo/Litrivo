@@ -6,12 +6,12 @@ Communication with the author and the thesis text are in Czech. Source code, com
 
 ## This directory: api
 
-The backend: the REST API service between the clients and the database, together with its OpenAPI specification. The specification is **the single source of truth for the contract between the backend and the clients** — the backend in this directory implements the endpoints according to it, `web-app` and `android-app` generate their clients from it. Client code is not written by hand. The API handles authentication of users who contribute crowdsourced prices. Publicly it is reached through the `server` reverse proxy at `api.litrivo.com`.
+The backend: the REST API service between the clients and the database, together with its OpenAPI specification. The specification is **the single source of truth for the contract between the backend and the clients** — the backend in this directory implements the endpoints according to it, `web-app` and `mobile-app` generate their clients from it. Client code is not written by hand. The API handles authentication of users who contribute crowdsourced prices. Publicly it is reached through the `server` reverse proxy at `api.litrivo.com`.
 
 Rules:
 
 - A contract change starts here, not in the implementation. The spec changes first, then the clients are regenerated.
-- A change touches `api`, `web-app` and `android-app` at once — thanks to the monorepo it belongs in **one commit**, not several coordinated ones.
+- A change touches `api`, `web-app` and `mobile-app` at once — thanks to the monorepo it belongs in **one commit**, not several coordinated ones.
 - Any deviation of the implementation from the specification is a bug in the implementation, not in the specification.
 - The spec version and the endpoint versioning scheme will be settled during planning, as will the choice of technologies and client generation tools.
 
@@ -65,12 +65,13 @@ The project is **a single monorepo** rooted at `D:\GITHUB\Litrivo` (repository `
 |---|---|
 | `api` | backend: REST API service over the database, plus its OpenAPI specification — the single source of truth for the REST contract; clients are generated from it |
 | `server` | public-facing reverse proxy (HTTP/HTTPS, ports 80 and 443) in front of `api` and `web-app` |
-| `web-app` | web frontend (PWA) |
-| `android-app` | Android mobile app |
+| `web-app` | web frontend (PWA) in React / Next.js, served on `app.litrivo.com` |
+| `website` | presentation website on the apex `litrivo.com`: project website for the store listings, download links and QR codes |
+| `mobile-app` | mobile app in React Native — Android first, iOS later from the same codebase |
 | `crawler` | indexes petrol station brands, stations and their locations; does not collect prices |
 | `db` | database: schema, migrations and seed data (users, brands, stations, crowdsourced prices) |
 | `kubernetes` | deployment (Kubernetes manifests) |
 
 All subdirectories are empty so far. Build, lint and test commands and an architecture description will be added once there is code. The project is licensed under MIT (`LICENSE` in the repository root). The rationale for the monorepo is in the root `CLAUDE.md`.
 
-A REST contract change typically touches `api`, `web-app` and `android-app` at once — thanks to the monorepo it belongs in **one commit**, not several coordinated ones.
+A REST contract change typically touches `api`, `web-app` and `mobile-app` at once — thanks to the monorepo it belongs in **one commit**, not several coordinated ones.

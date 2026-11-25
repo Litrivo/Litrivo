@@ -4,9 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Communication with the author and the thesis text are in Czech. Source code, comments, commit messages, all project documentation and these CLAUDE.md files are in English, because the project targets an international audience (the EU and Europe).
 
-## This directory: android-app
+## This directory: website
 
-Native Android mobile app, a companion to the web PWA with the same features (map, location via system location services, driving range, sorting). It talks to the `api` backend over the REST API (through the `server` reverse proxy), including authentication for crowdsourced price contributions. A native iOS app is not planned for now but not ruled out; iPhone users can install the PWA. The package ID is **`com.litrivo.app`**, following the canonical domain `litrivo.com`. It cannot be changed on Google Play, so double-check it when creating the app in Play Console. New personal developer accounts must pass closed testing before a production release: 12 testers for 14 consecutive days.
+The presentation website on the apex `litrivo.com` (`www` redirects to the apex with 301). It is a separate project from `web-app`: mostly static content, its own hostname and its own deployment. Its purposes:
+
+- the project website required for the store listings (Google Play now, the Apple App Store later),
+- download links and QR codes for Google Play and the App Store,
+- a link that opens the web app on `app.litrivo.com`,
+- later also the privacy policy and, per `docs/infra-email.md`, a page with manual mail client setup and the Apple `.mobileconfig` download.
+
+Technologies have not been chosen yet. Next.js with a static export would share the stack with `web-app`.
 
 ## Thesis context
 
@@ -56,12 +63,13 @@ The project is **a single monorepo** rooted at `D:\GITHUB\Litrivo` (repository `
 |---|---|
 | `api` | backend: REST API service over the database, plus its OpenAPI specification — the single source of truth for the REST contract; clients are generated from it |
 | `server` | public-facing reverse proxy (HTTP/HTTPS, ports 80 and 443) in front of `api` and `web-app` |
-| `web-app` | web frontend (PWA) |
-| `android-app` | Android mobile app |
+| `web-app` | web frontend (PWA) in React / Next.js, served on `app.litrivo.com` |
+| `website` | presentation website on the apex `litrivo.com`: project website for the store listings, download links and QR codes |
+| `mobile-app` | mobile app in React Native — Android first, iOS later from the same codebase |
 | `crawler` | indexes petrol station brands, stations and their locations; does not collect prices |
 | `db` | database: schema, migrations and seed data (users, brands, stations, crowdsourced prices) |
 | `kubernetes` | deployment (Kubernetes manifests) |
 
 All subdirectories are empty so far. Build, lint and test commands and an architecture description will be added once there is code. The project is licensed under MIT (`LICENSE` in the repository root). The rationale for the monorepo is in the root `CLAUDE.md`.
 
-A REST contract change typically touches `api`, `web-app` and `android-app` at once — thanks to the monorepo it belongs in **one commit**, not several coordinated ones.
+A REST contract change typically touches `api`, `web-app` and `mobile-app` at once — thanks to the monorepo it belongs in **one commit**, not several coordinated ones.

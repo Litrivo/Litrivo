@@ -6,7 +6,7 @@ Communication with the author and the thesis text are in Czech. Source code, com
 
 ## This directory: web-app
 
-Web frontend as a PWA for phones and desktops. It talks to the `api` backend over the REST API, reached through the `server` reverse proxy. It also covers iPhone users, who can install the PWA from the browser; a native iOS app is not planned for now. Key features: an interactive map of petrol stations, a search field for the reference location, a button to determine the location via browser geolocation, driving range input and result sorting. Technologies have not been chosen yet.
+Web frontend as a PWA for phones and desktops. It talks to the `api` backend over the REST API, reached through the `server` reverse proxy. It also covers iPhone users, who can install the PWA from the browser; a native iOS app is not planned for now. Key features: an interactive map of petrol stations, a search field for the reference location, a button to determine the location via browser geolocation, driving range input and result sorting. Stack: **React / Next.js** (decided). Served on `app.litrivo.com`. The apex `litrivo.com` hosts a separate **presentation website**. It is the project website for the store listings (Google Play now, the Apple App Store later) and links to the app: download links and QR codes for Google Play and the App Store, and a link that opens the web app on `app.litrivo.com`. It lives in `website`, not here.
 
 ## Thesis context
 
@@ -56,12 +56,13 @@ The project is **a single monorepo** rooted at `D:\GITHUB\Litrivo` (repository `
 |---|---|
 | `api` | backend: REST API service over the database, plus its OpenAPI specification — the single source of truth for the REST contract; clients are generated from it |
 | `server` | public-facing reverse proxy (HTTP/HTTPS, ports 80 and 443) in front of `api` and `web-app` |
-| `web-app` | web frontend (PWA) |
-| `android-app` | Android mobile app |
+| `web-app` | web frontend (PWA) in React / Next.js, served on `app.litrivo.com` |
+| `website` | presentation website on the apex `litrivo.com`: project website for the store listings, download links and QR codes |
+| `mobile-app` | mobile app in React Native — Android first, iOS later from the same codebase |
 | `crawler` | indexes petrol station brands, stations and their locations; does not collect prices |
 | `db` | database: schema, migrations and seed data (users, brands, stations, crowdsourced prices) |
 | `kubernetes` | deployment (Kubernetes manifests) |
 
 All subdirectories are empty so far. Build, lint and test commands and an architecture description will be added once there is code. The project is licensed under MIT (`LICENSE` in the repository root). The rationale for the monorepo is in the root `CLAUDE.md`.
 
-A REST contract change typically touches `api`, `web-app` and `android-app` at once — thanks to the monorepo it belongs in **one commit**, not several coordinated ones.
+A REST contract change typically touches `api`, `web-app` and `mobile-app` at once — thanks to the monorepo it belongs in **one commit**, not several coordinated ones.

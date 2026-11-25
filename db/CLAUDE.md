@@ -56,12 +56,13 @@ The project is **a single monorepo** rooted at `D:\GITHUB\Litrivo` (repository `
 |---|---|
 | `api` | backend: REST API service over the database, plus its OpenAPI specification — the single source of truth for the REST contract; clients are generated from it |
 | `server` | public-facing reverse proxy (HTTP/HTTPS, ports 80 and 443) in front of `api` and `web-app` |
-| `web-app` | web frontend (PWA) |
-| `android-app` | Android mobile app |
+| `web-app` | web frontend (PWA) in React / Next.js, served on `app.litrivo.com` |
+| `website` | presentation website on the apex `litrivo.com`: project website for the store listings, download links and QR codes |
+| `mobile-app` | mobile app in React Native — Android first, iOS later from the same codebase |
 | `crawler` | indexes petrol station brands, stations and their locations; does not collect prices |
 | `db` | database: schema, migrations and seed data (users, brands, stations, crowdsourced prices) |
 | `kubernetes` | deployment (Kubernetes manifests) |
 
 All subdirectories are empty so far. Build, lint and test commands and an architecture description will be added once there is code. The project is licensed under MIT (`LICENSE` in the repository root). The rationale for the monorepo is in the root `CLAUDE.md`.
 
-A REST contract change typically touches `api`, `web-app` and `android-app` at once — thanks to the monorepo it belongs in **one commit**, not several coordinated ones.
+A REST contract change typically touches `api`, `web-app` and `mobile-app` at once — thanks to the monorepo it belongs in **one commit**, not several coordinated ones.
